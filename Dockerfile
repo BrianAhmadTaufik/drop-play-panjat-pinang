@@ -1,12 +1,11 @@
-FROM php:8.3-apache
-
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-ENV COMPOSER_PROCESS_TIMEOUT=900
+FROM php:8.3-cli
 
 WORKDIR /var/www/html
 
+ENV COMPOSER_PROCESS_TIMEOUT=900
+
 # =========================================================
-# PHP extensions + system packages
+# System dependencies + PostgreSQL extension
 # =========================================================
 
 RUN apt-get update \
@@ -29,13 +28,13 @@ RUN apt-get update \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # =========================================================
-# Laravel application
+# Laravel project
 # =========================================================
 
 COPY . .
 
 # =========================================================
-# PHP dependencies
+# Install PHP dependencies
 # =========================================================
 
 RUN composer install \
@@ -45,7 +44,7 @@ RUN composer install \
         --optimize-autoloader
 
 # =========================================================
-# Laravel directories
+# Laravel writable directories
 # =========================================================
 
 RUN mkdir -p \
@@ -59,21 +58,10 @@ RUN mkdir -p \
         bootstrap/cache
 
 # =========================================================
-# Apache -> Laravel /public
+# Port
 # =========================================================
 
-RUN sed -ri \
-    -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
-    /etc/apache2/sites-available/*.conf \
-    /etc/apache2/apache2.conf \
-    /etc/apache2/conf-available/*.conf
+EXPOSE 8080
 
-# =========================================================
-# Laravel Apache rewrite
-# =========================================================
-
-RUN a2enmod rewrite
-
-EXPOSE 80
-
-CMD ["apache2-foreground"]
+# Railway injects $PORT at runtime
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]
