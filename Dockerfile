@@ -2,6 +2,13 @@ FROM php:8.3-apache
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
+# Apache + PHP mod_php harus menggunakan prefork.
+RUN a2dismod mpm_event || true \
+    && a2dismod mpm_worker || true \
+    && a2dismod mpm_dynamic || true \
+    && a2enmod mpm_prefork \
+    && a2enmod rewrite
+
 RUN apt-get update \
     && apt-get install -y \
         git \
@@ -13,7 +20,6 @@ RUN apt-get update \
         pdo_pgsql \
         pgsql \
         zip \
-    && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -28,15 +34,22 @@ RUN composer install \
     --no-dev \
     --optimize-autoloader
 
-RUN chown -R www-data:www-data \
-    /var/www/html/storage \
-    /var/www/html/bootstrap/cache
+RUN mkdir -p \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache
 
+RUN chown -R www-data:www-data \
+    storage \
+    bootstrap/cache
+
+# Arahkan Apache ke Laravel /public
 RUN sed -ri \
-    -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" \
-    /etc/apache2/sites-available/*.conf \
-    /etc/apache2/apache2.conf \
-    /etc/apache2/conf-available/*.conf
+    -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+    /etc/apache2/sites-available/000-default.conf \
+    /etc/apache2/conf-available/docker-php.conf
 
 EXPOSE 80
 
