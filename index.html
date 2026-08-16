@@ -1,0 +1,2424 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Drop Play — Panjat Pinang Kemerdekaan</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --red: #e9273f;
+            --red-dark: #c91931;
+            --cream: #fff8ec;
+            --cream-2: #f7ead5;
+            --brown: #8a4d21;
+            --brown-dark: #5b3218;
+            --gold: #f4b83f;
+            --gold-light: #fff0b4;
+            --green: #5b973f;
+            --text: #171717;
+            --muted: #938a7f;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #e9273f 0,
+                    #ee4053 220px,
+                    #f5b3aa 410px,
+                    #fff7ea 680px,
+                    #fff7ea 100%
+                );
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .page {
+            position: relative;
+            z-index: 2;
+
+            width: min(1120px, calc(100% - 28px));
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+
+            padding-top: 22px;
+        }
+
+        .brand-logo {
+            display: block;
+
+            width: 140px;
+            max-width: 32vw;
+            height: auto;
+
+            object-fit: contain;
+        }
+
+        .countdown {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            color: white;
+        }
+
+        .countdown-caption {
+            text-align: right;
+
+            font-size: 8px;
+            line-height: 1.4;
+            font-weight: 900;
+            letter-spacing: 1px;
+
+            opacity: .72;
+        }
+
+        .timer {
+            display: flex;
+            gap: 5px;
+        }
+
+        .timer-box {
+            width: 48px;
+            padding: 8px 5px;
+
+            text-align: center;
+
+            border:
+                1px solid
+                rgba(255,255,255,.24);
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,.13);
+
+            backdrop-filter: blur(10px);
+        }
+
+        .timer-number {
+            font-size: 17px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .timer-label {
+            margin-top: 4px;
+
+            font-size: 7px;
+            font-weight: 700;
+
+            opacity: .62;
+        }
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            padding: 38px 0 25px;
+
+            text-align: center;
+            color: white;
+        }
+
+        .event-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            padding: 7px 13px;
+
+            border-radius: 999px;
+
+            background:
+                rgba(255,255,255,.12);
+
+            border:
+                1px solid
+                rgba(255,255,255,.24);
+
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .event-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+            background: white;
+
+            animation: blink 1.3s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: .25;
+            }
+        }
+
+        .hero h1 {
+            margin-top: 16px;
+
+            font-size: clamp(54px, 8vw, 88px);
+            line-height: .82;
+            letter-spacing: -5px;
+            font-weight: 1000;
+
+            text-transform: uppercase;
+
+            text-shadow:
+                0 7px 0
+                rgba(145,15,30,.12);
+        }
+
+        .hero h1 span {
+            display: block;
+            color: #fff0ae;
+        }
+
+        .hero p {
+            max-width: 550px;
+            margin: 19px auto 0;
+
+            font-size: 13px;
+            line-height: 1.6;
+
+            color:
+                rgba(255,255,255,.82);
+        }
+
+        /* =========================================================
+           GAME CARD
+        ========================================================= */
+
+        .game-card {
+            overflow: hidden;
+
+            padding:
+                17px
+                17px
+                0;
+
+            border-radius: 32px;
+
+            background:
+                rgba(255,250,241,.97);
+
+            box-shadow:
+                0 30px 90px
+                rgba(80,15,20,.20);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding:
+                3px
+                7px
+                15px;
+        }
+
+        .game-title {
+            color: #534b42;
+
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .7px;
+        }
+
+        .live {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            color: var(--red);
+
+            font-size: 8px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+            background: var(--red);
+
+            box-shadow:
+                0 0 0 4px
+                rgba(233,39,63,.10);
+
+            animation:
+                livePulse 1.3s infinite;
+        }
+
+        @keyframes livePulse {
+            50% {
+                transform: scale(.65);
+                opacity: .4;
+            }
+        }
+
+        /* =========================================================
+           SCENE
+        ========================================================= */
+
+        .scene {
+            position: relative;
+
+            height: 650px;
+
+            overflow: hidden;
+
+            border-radius: 25px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #fffaf1 0%,
+                    #fff3df 69%,
+                    #f4dfba 100%
+                );
+        }
+
+        .sun {
+            position: absolute;
+
+            left: 50%;
+            top: 10px;
+
+            width: 310px;
+            height: 310px;
+
+            transform:
+                translateX(-50%);
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(255,206,91,.28),
+                    rgba(255,206,91,0)
+                );
+        }
+
+        .cloud {
+            position: absolute;
+
+            font-size: 45px;
+            opacity: .45;
+        }
+
+        .cloud.left {
+            top: 60px;
+            left: 7%;
+        }
+
+        .cloud.right {
+            top: 110px;
+            right: 7%;
+        }
+
+        /* =========================================================
+           POLE
+        ========================================================= */
+
+        .pole-shadow {
+            position: absolute;
+
+            left: 50%;
+            bottom: 46px;
+
+            width: 110px;
+            height: 18px;
+
+            transform:
+                translateX(-50%);
+
+            border-radius: 50%;
+
+            background:
+                rgba(50,25,10,.15);
+
+            filter: blur(7px);
+        }
+
+        .pole {
+            position: absolute;
+
+            left: 50%;
+            bottom: 42px;
+
+            width: 44px;
+            height: 520px;
+
+            transform:
+                translateX(-50%);
+
+            border-radius:
+                24px 24px
+                8px 8px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #5d3218 0%,
+                    #875021 20%,
+                    #b96c2f 43%,
+                    #c47b39 50%,
+                    #9b5726 73%,
+                    #5b3218 100%
+                );
+
+            box-shadow:
+                10px 0 0
+                rgba(0,0,0,.07);
+
+            z-index: 8;
+        }
+
+        .pole::before {
+            content: "";
+
+            position: absolute;
+
+            left: 7px;
+            top: 0;
+
+            width: 5px;
+            height: 100%;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,.15);
+        }
+
+        .crossbar {
+            position: absolute;
+
+            left: 50%;
+            top: 88px;
+
+            width: 420px;
+            height: 24px;
+
+            transform:
+                translateX(-50%);
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #a8612d,
+                    #703d1b
+                );
+
+            box-shadow:
+                0 6px 0
+                rgba(70,35,12,.12);
+
+            z-index: 9;
+        }
+
+        .crossbar-center {
+            position: absolute;
+
+            left: 50%;
+            top: 72px;
+
+            width: 70px;
+            height: 34px;
+
+            transform:
+                translateX(-50%);
+
+            border-radius:
+                28px 28px
+                12px 12px;
+
+            background:
+                #945322;
+
+            z-index: 10;
+        }
+
+        /* =========================================================
+           REWARDS
+        ========================================================= */
+
+        .reward {
+            position: absolute;
+
+            width: 152px;
+            min-height: 96px;
+
+            padding: 12px;
+
+            text-align: center;
+
+            border-radius: 17px;
+
+            background:
+                rgba(255,255,255,.96);
+
+            z-index: 20;
+
+            transition:
+                .45s ease;
+        }
+
+        .reward-icon {
+            font-size: 27px;
+            line-height: 1;
+        }
+
+        .reward-name {
+            margin-top: 7px;
+
+            font-size: 10px;
+            font-weight: 1000;
+            letter-spacing: .2px;
+        }
+
+        .reward-status {
+            display: inline-flex;
+
+            margin-top: 7px;
+            padding: 5px 9px;
+
+            border-radius: 999px;
+
+            font-size: 7px;
+            font-weight: 1000;
+            letter-spacing: .4px;
+        }
+
+        .reward.unlocked {
+            border:
+                2px solid
+                var(--gold);
+
+            box-shadow:
+                0 0 0 5px
+                rgba(244,184,63,.08),
+
+                0 15px 34px
+                rgba(160,100,20,.14);
+
+            animation:
+                rewardFloat 3s ease-in-out infinite;
+        }
+
+        .reward.unlocked
+        .reward-status {
+            color: #8a6107;
+            background: var(--gold-light);
+        }
+
+        .reward.locked {
+            opacity: .36;
+            filter: grayscale(1);
+
+            border:
+                1px solid
+                rgba(0,0,0,.04);
+
+            box-shadow:
+                0 8px 20px
+                rgba(70,45,20,.05);
+        }
+
+        .reward.locked
+        .reward-status {
+            color: #aaa39a;
+            background: #eeeae2;
+        }
+
+        @keyframes rewardFloat {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        .reward-left {
+            left:
+                calc(50% - 300px);
+        }
+
+        .reward-right {
+            right:
+                calc(50% - 300px);
+        }
+
+        .reward-5 {
+            top: 67px;
+        }
+
+        .reward-4 {
+            top: 155px;
+        }
+
+        .reward-3 {
+            top: 285px;
+        }
+
+        .reward-2 {
+            top: 375px;
+        }
+
+        .reward-1 {
+            top: 490px;
+        }
+
+        .reward-left::after {
+            content: "";
+
+            position: absolute;
+
+            right: -58px;
+            top: 50%;
+
+            width: 58px;
+            height: 3px;
+
+            transform:
+                translateY(-50%);
+
+            background:
+                #aa6c35;
+        }
+
+        .reward-right::after {
+            content: "";
+
+            position: absolute;
+
+            left: -58px;
+            top: 50%;
+
+            width: 58px;
+            height: 3px;
+
+            transform:
+                translateY(-50%);
+
+            background:
+                #aa6c35;
+        }
+
+        /* =========================================================
+           PEOPLE
+        ========================================================= */
+
+        .people {
+            position: absolute;
+            inset: 0;
+
+            z-index: 30;
+
+            pointer-events: none;
+        }
+
+        .person {
+            position: absolute;
+
+            width: 58px;
+            height: 105px;
+
+            transform-origin:
+                center bottom;
+
+            filter:
+                drop-shadow(
+                    0 7px 5px
+                    rgba(0,0,0,.18)
+                );
+        }
+
+        .person .head {
+            position: absolute;
+
+            left: 50%;
+            top: 0;
+
+            width: 23px;
+            height: 23px;
+
+            transform:
+                translateX(-50%);
+
+            border-radius: 50%;
+
+            background:
+                #d98b5f;
+
+            border:
+                2px solid
+                rgba(0,0,0,.08);
+
+            z-index: 5;
+        }
+
+        .person .hair {
+            position: absolute;
+
+            left: 50%;
+            top: -2px;
+
+            width: 24px;
+            height: 10px;
+
+            transform:
+                translateX(-50%);
+
+            border-radius:
+                15px 15px 5px 5px;
+
+            background:
+                #39251d;
+
+            z-index: 6;
+        }
+
+        .person .body {
+            position: absolute;
+
+            left: 50%;
+            top: 22px;
+
+            width: 27px;
+            height: 37px;
+
+            transform:
+                translateX(-50%);
+
+            border-radius:
+                9px 9px 6px 6px;
+        }
+
+        .person .arm {
+            position: absolute;
+
+            top: 24px;
+
+            width: 8px;
+            height: 38px;
+
+            border-radius: 999px;
+
+            background:
+                #d98b5f;
+
+            transform-origin:
+                top center;
+
+            z-index: 2;
+        }
+
+        .person .arm-left {
+            left: 9px;
+            transform:
+                rotate(48deg);
+        }
+
+        .person .arm-right {
+            right: 9px;
+            transform:
+                rotate(-55deg);
+        }
+
+        .person .leg {
+            position: absolute;
+
+            top: 54px;
+
+            width: 10px;
+            height: 40px;
+
+            border-radius: 999px;
+
+            background:
+                #27384e;
+
+            transform-origin:
+                top center;
+        }
+
+        .person .leg-left {
+            left: 13px;
+            transform:
+                rotate(28deg);
+        }
+
+        .person .leg-right {
+            right: 13px;
+            transform:
+                rotate(-25deg);
+        }
+
+        .person-1 {
+            left:
+                calc(50% - 20px);
+
+            top: 112px;
+
+            transform:
+                rotate(-8deg)
+                scale(.9);
+
+            animation:
+                person1 2s
+                ease-in-out
+                infinite;
+        }
+
+        .person-1 .body {
+            background: #e52d42;
+        }
+
+        .person-2 {
+            left:
+                calc(50% - 70px);
+
+            top: 220px;
+
+            transform:
+                rotate(15deg)
+                scale(.95);
+
+            animation:
+                person2 2.4s
+                ease-in-out
+                infinite;
+        }
+
+        .person-2 .body {
+            background: #2879d1;
+        }
+
+        .person-3 {
+            left:
+                calc(50% + 19px);
+
+            top: 300px;
+
+            transform:
+                rotate(-15deg)
+                scale(.92);
+
+            animation:
+                person3 2.3s
+                ease-in-out
+                infinite;
+        }
+
+        .person-3 .body {
+            background: #efa62b;
+        }
+
+        .person-4 {
+            left:
+                calc(50% - 44px);
+
+            top: 410px;
+
+            transform:
+                rotate(9deg)
+                scale(1.04);
+
+            animation:
+                person4 2.1s
+                ease-in-out
+                infinite;
+        }
+
+        .person-4 .body {
+            background: #2eaa6c;
+        }
+
+        @keyframes person1 {
+            0%,
+            100% {
+                margin-top: 0;
+            }
+
+            50% {
+                margin-top: -5px;
+            }
+        }
+
+        @keyframes person2 {
+            0%,
+            100% {
+                margin-top: 0;
+            }
+
+            50% {
+                margin-top: 5px;
+            }
+        }
+
+        @keyframes person3 {
+            0%,
+            100% {
+                margin-top: 4px;
+            }
+
+            50% {
+                margin-top: -4px;
+            }
+        }
+
+        @keyframes person4 {
+            0%,
+            100% {
+                margin-top: 0;
+            }
+
+            50% {
+                margin-top: -4px;
+            }
+        }
+
+        /* =========================================================
+           GROUND
+        ========================================================= */
+
+        .ground {
+            position: absolute;
+
+            left: -5%;
+            right: -5%;
+            bottom: -3px;
+
+            height: 74px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #6ca64a,
+                    #4d8938
+                );
+
+            border-radius:
+                50%
+                50%
+                0 0;
+
+            z-index: 40;
+        }
+
+        .ground::after {
+            content: "";
+
+            position: absolute;
+
+            left: 15%;
+            top: 17px;
+
+            width: 9px;
+            height: 4px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255,255,255,.18);
+
+            box-shadow:
+                120px 10px rgba(255,255,255,.13),
+                300px -2px rgba(255,255,255,.12),
+                520px 7px rgba(255,255,255,.13);
+        }
+
+        /* =========================================================
+           PROGRESS
+        ========================================================= */
+
+        .progress {
+            position: relative;
+            z-index: 50;
+
+            padding:
+                20px
+                8px
+                24px;
+
+            background: white;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+
+            margin-bottom: 9px;
+        }
+
+        .progress-title {
+            color: #847c72;
+
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .progress-value {
+            color: var(--red);
+
+            font-size: 27px;
+            line-height: 1;
+            font-weight: 1000;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 15px;
+
+            padding: 3px;
+
+            border-radius: 999px;
+
+            background:
+                #eee8de;
+
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            position: relative;
+
+            width: 67%;
+            height: 100%;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #e9273f,
+                    #f55062
+                );
+
+            transition:
+                width 1s
+                cubic-bezier(.2,.8,.2,1);
+
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    110deg,
+                    transparent 25%,
+                    rgba(255,255,255,.5) 50%,
+                    transparent 75%
+                );
+
+            animation:
+                shine 2s linear infinite;
+        }
+
+        @keyframes shine {
+            from {
+                transform:
+                    translateX(-100%);
+            }
+
+            to {
+                transform:
+                    translateX(100%);
+            }
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+
+            margin-top: 7px;
+
+            color:
+                #aaa299;
+
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        /* =========================================================
+           LEADERBOARD
+        ========================================================= */
+
+        .leaderboard {
+            margin-top: 25px;
+            padding: 28px;
+
+            border-radius: 28px;
+
+            background:
+                rgba(255,255,255,.96);
+
+            box-shadow:
+                0 22px 60px
+                rgba(80,20,20,.11);
+        }
+
+        .leaderboard-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 22px;
+        }
+
+        .leader-title {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .leader-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background:
+                #fff2ca;
+
+            font-size: 21px;
+        }
+
+        .leader-title h2 {
+            font-size: 19px;
+            font-weight: 1000;
+        }
+
+        .leader-title p {
+            margin-top: 3px;
+
+            color:
+                #a29a90;
+
+            font-size: 9px;
+        }
+
+        .ranking-live {
+            padding:
+                6px
+                10px;
+
+            border-radius: 999px;
+
+            color: var(--red);
+            background:
+                #fff0f2;
+
+            font-size: 8px;
+            font-weight: 1000;
+            letter-spacing: .6px;
+        }
+
+        .top-three {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1.1fr 1fr;
+
+            align-items: end;
+
+            gap: 12px;
+
+            max-width: 700px;
+
+            margin:
+                0 auto
+                25px;
+        }
+
+        .podium {
+            padding:
+                17px
+                10px
+                15px;
+
+            text-align: center;
+
+            border-radius: 20px;
+
+            background:
+                #f7f5f1;
+
+            border:
+                1px solid
+                #ece6dd;
+        }
+
+        .podium.first {
+            padding-top: 25px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #fff8da,
+                    #fff3c1
+                );
+
+            border-color:
+                #f0d36f;
+
+            transform:
+                translateY(-8px);
+
+            box-shadow:
+                0 12px 30px
+                rgba(200,150,30,.1);
+        }
+
+        .medal {
+            margin-bottom: 8px;
+
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin:
+                0 auto
+                8px;
+
+            border-radius: 50%;
+
+            background:
+                #dedbd6;
+
+            color:
+                #625c55;
+
+            font-size: 14px;
+            font-weight: 1000;
+        }
+
+        .podium.first .avatar {
+            width: 50px;
+            height: 50px;
+
+            background:
+                var(--red);
+
+            color: white;
+        }
+
+        .podium-name {
+            font-size: 11px;
+            font-weight: 1000;
+        }
+
+        .podium-rank {
+            margin-top: 4px;
+
+            color:
+                #9e968c;
+
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        .other-ranks {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 8px;
+        }
+
+        .rank {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            padding:
+                10px;
+
+            border-radius: 13px;
+
+            background:
+                #f7f5f1;
+        }
+
+        .rank-number {
+            color:
+                #9b948b;
+
+            font-size: 8px;
+            font-weight: 1000;
+        }
+
+        .rank-avatar {
+            flex:
+                0 0 28px;
+
+            width: 28px;
+            height: 28px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                #e1ded9;
+
+            color:
+                #716b64;
+
+            font-size: 9px;
+            font-weight: 900;
+        }
+
+        .rank-name {
+            overflow: hidden;
+
+            white-space: nowrap;
+            text-overflow: ellipsis;
+
+            font-size: 9px;
+            font-weight: 900;
+        }
+
+        footer {
+            padding:
+                28px
+                0
+                5px;
+
+            text-align: center;
+
+            color:
+                rgba(255,255,255,.72);
+
+            font-size: 9px;
+            font-weight: 800;
+        }
+
+        /* =========================================================
+           TABLET
+        ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .scene {
+                height: 620px;
+            }
+
+            .reward {
+                width: 135px;
+            }
+
+            .reward-left {
+                left:
+                    calc(50% - 270px);
+            }
+
+            .reward-right {
+                right:
+                    calc(50% - 270px);
+            }
+
+            .reward-left::after,
+            .reward-right::after {
+                width: 40px;
+            }
+
+            .reward-left::after {
+                right: -40px;
+            }
+
+            .reward-right::after {
+                left: -40px;
+            }
+
+            .other-ranks {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+        }
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 650px) {
+
+            .page {
+                width:
+                    calc(100% - 12px);
+            }
+
+            .header {
+                padding-top: 14px;
+            }
+
+            .brand-logo {
+                width: 110px;
+            }
+
+            .countdown-caption {
+                display: none;
+            }
+
+            .timer {
+                gap: 3px;
+            }
+
+            .timer-box {
+                width: 37px;
+                padding:
+                    7px 3px;
+            }
+
+            .timer-number {
+                font-size: 12px;
+            }
+
+            .timer-label {
+                font-size: 6px;
+            }
+
+            .hero {
+                padding:
+                    30px 0 18px;
+            }
+
+            .hero h1 {
+                font-size: 53px;
+                letter-spacing: -3px;
+            }
+
+            .hero p {
+                max-width: 335px;
+                font-size: 11px;
+            }
+
+            .game-card {
+                padding:
+                    12px 12px 0;
+
+                border-radius: 24px;
+            }
+
+            .scene {
+                height: 555px;
+                border-radius: 20px;
+            }
+
+            .game-header {
+                padding:
+                    2px 4px 12px;
+            }
+
+            .game-title {
+                font-size: 9px;
+            }
+
+            .live {
+                font-size: 7px;
+            }
+
+            .crossbar {
+                width: 230px;
+                height: 17px;
+                top: 65px;
+            }
+
+            .crossbar-center {
+                top: 51px;
+                width: 53px;
+                height: 28px;
+            }
+
+            .pole {
+                width: 32px;
+                height: 450px;
+                bottom: 42px;
+            }
+
+            .sun {
+                width: 250px;
+                height: 250px;
+            }
+
+            .reward {
+                width: 105px;
+                min-height: 74px;
+                padding: 9px 6px;
+                border-radius: 14px;
+            }
+
+            .reward-icon {
+                font-size: 21px;
+            }
+
+            .reward-name {
+                margin-top: 5px;
+                font-size: 8px;
+            }
+
+            .reward-status {
+                margin-top: 5px;
+                padding: 4px 7px;
+                font-size: 6px;
+            }
+
+            .reward-left {
+                left: 3%;
+            }
+
+            .reward-right {
+                right: 3%;
+            }
+
+            .reward-5 {
+                top: 45px;
+            }
+
+            .reward-4 {
+                top: 120px;
+            }
+
+            .reward-3 {
+                top: 220px;
+            }
+
+            .reward-2 {
+                top: 310px;
+            }
+
+            .reward-1 {
+                top: 415px;
+            }
+
+            .reward-left::after,
+            .reward-right::after {
+                width: 28px;
+            }
+
+            .reward-left::after {
+                right: -28px;
+            }
+
+            .reward-right::after {
+                left: -28px;
+            }
+
+            .person {
+                width: 45px;
+                height: 85px;
+            }
+
+            .person .head {
+                width: 19px;
+                height: 19px;
+            }
+
+            .person .hair {
+                width: 20px;
+                height: 8px;
+            }
+
+            .person .body {
+                width: 22px;
+                height: 30px;
+                top: 19px;
+            }
+
+            .person .arm {
+                width: 7px;
+                height: 30px;
+                top: 20px;
+            }
+
+            .person .leg {
+                width: 8px;
+                height: 32px;
+                top: 47px;
+            }
+
+            .person-1 {
+                left:
+                    calc(50% - 15px);
+                top: 95px;
+            }
+
+            .person-2 {
+                left:
+                    calc(50% - 52px);
+                top: 195px;
+            }
+
+            .person-3 {
+                left:
+                    calc(50% + 10px);
+                top: 285px;
+            }
+
+            .person-4 {
+                left:
+                    calc(50% - 30px);
+                top: 385px;
+            }
+
+            .ground {
+                height: 62px;
+            }
+
+            .progress {
+                padding:
+                    17px
+                    4px
+                    22px;
+            }
+
+            .progress-value {
+                font-size: 23px;
+            }
+
+            .leaderboard {
+                margin-top: 18px;
+
+                padding: 18px;
+
+                border-radius: 22px;
+            }
+
+            .leaderboard-head {
+                margin-bottom: 17px;
+            }
+
+            .leader-title h2 {
+                font-size: 16px;
+            }
+
+            .leader-title p {
+                font-size: 8px;
+            }
+
+            .leader-icon {
+                width: 34px;
+                height: 34px;
+
+                font-size: 18px;
+            }
+
+            .ranking-live {
+                font-size: 6px;
+            }
+
+            .top-three {
+                gap: 6px;
+            }
+
+            .podium {
+                padding:
+                    12px
+                    5px;
+            }
+
+            .podium.first {
+                padding-top: 18px;
+            }
+
+            .medal {
+                font-size: 21px;
+            }
+
+            .avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 11px;
+            }
+
+            .podium.first .avatar {
+                width: 42px;
+                height: 42px;
+            }
+
+            .podium-name {
+                font-size: 8px;
+            }
+
+            .podium-rank {
+                font-size: 6px;
+            }
+
+            .other-ranks {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 390px) {
+
+            .scene {
+                height: 510px;
+            }
+
+            .reward {
+                width: 91px;
+            }
+
+            .reward-5 {
+                top: 40px;
+            }
+
+            .reward-4 {
+                top: 105px;
+            }
+
+            .reward-3 {
+                top: 195px;
+            }
+
+            .reward-2 {
+                top: 275px;
+            }
+
+            .reward-1 {
+                top: 365px;
+            }
+
+            .pole {
+                height: 410px;
+            }
+
+            .person-1 {
+                top: 82px;
+            }
+
+            .person-2 {
+                top: 175px;
+            }
+
+            .person-3 {
+                top: 255px;
+            }
+
+            .person-4 {
+                top: 345px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <header class="header">
+
+            <img
+                src="public/images/drop-play-white.png"
+                alt="Drop Play"
+                class="brand-logo"
+            >
+
+            <div class="countdown">
+
+                <div class="countdown-caption">
+                    EVENT<br>
+                    BERAKHIR DALAM
+                </div>
+
+                <div class="timer">
+
+                    <div class="timer-box">
+                        <div
+                            class="timer-number"
+                            id="hours"
+                        >
+                            12
+                        </div>
+
+                        <div class="timer-label">
+                            JAM
+                        </div>
+                    </div>
+
+                    <div class="timer-box">
+                        <div
+                            class="timer-number"
+                            id="minutes"
+                        >
+                            34
+                        </div>
+
+                        <div class="timer-label">
+                            MENIT
+                        </div>
+                    </div>
+
+                    <div class="timer-box">
+                        <div
+                            class="timer-number"
+                            id="seconds"
+                        >
+                            56
+                        </div>
+
+                        <div class="timer-label">
+                            DETIK
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
+
+        <section class="hero">
+
+            <div class="event-badge">
+                <span class="event-dot"></span>
+                EVENT KEMERDEKAAN 2026
+            </div>
+
+            <h1>
+                PANJAT
+                <span>PINANG</span>
+            </h1>
+
+            <p>
+                Naikkan progress bersama-sama,
+                buka hadiah di sepanjang tiang,
+                dan rebut posisi teratas sebelum
+                waktu berakhir.
+            </p>
+
+        </section>
+
+
+        <!-- =====================================================
+             GAME
+        ====================================================== -->
+
+        <section class="game-card">
+
+            <div class="game-header">
+
+                <div class="game-title">
+                    🧗 PERJUANGAN MENUJU PUNCAK
+                </div>
+
+                <div class="live">
+                    <span class="live-dot"></span>
+                    LIVE EVENT
+                </div>
+
+            </div>
+
+
+            <div class="scene">
+
+                <div class="sun"></div>
+
+                <div class="cloud left">
+                    ☁️
+                </div>
+
+                <div class="cloud right">
+                    ☁️
+                </div>
+
+
+                <!-- TIANG -->
+
+                <div class="pole-shadow"></div>
+
+                <div class="pole"></div>
+
+                <div class="crossbar"></div>
+
+                <div class="crossbar-center"></div>
+
+
+                <!-- =================================================
+                     HADIAH
+                ================================================== -->
+
+                <div
+                    class="reward reward-5 reward-left locked"
+                    data-unlock="100"
+                >
+                    <div class="reward-icon">
+                        🏆
+                    </div>
+
+                    <div class="reward-name">
+                        GRAND PRIZE
+                    </div>
+
+                    <div class="reward-status">
+                        🔒 LOCKED
+                    </div>
+                </div>
+
+
+                <div
+                    class="reward reward-4 reward-right unlocked"
+                    data-unlock="80"
+                >
+                    <div class="reward-icon">
+                        📱
+                    </div>
+
+                    <div class="reward-name">
+                        SMARTPHONE
+                    </div>
+
+                    <div class="reward-status">
+                        UNLOCKED
+                    </div>
+                </div>
+
+
+                <div
+                    class="reward reward-3 reward-left unlocked"
+                    data-unlock="60"
+                >
+                    <div class="reward-icon">
+                        ⌚
+                    </div>
+
+                    <div class="reward-name">
+                        SMARTWATCH
+                    </div>
+
+                    <div class="reward-status">
+                        UNLOCKED
+                    </div>
+                </div>
+
+
+                <div
+                    class="reward reward-2 reward-right unlocked"
+                    data-unlock="40"
+                >
+                    <div class="reward-icon">
+                        🎧
+                    </div>
+
+                    <div class="reward-name">
+                        HEADSET
+                    </div>
+
+                    <div class="reward-status">
+                        UNLOCKED
+                    </div>
+                </div>
+
+
+                <div
+                    class="reward reward-1 reward-left unlocked"
+                    data-unlock="20"
+                >
+                    <div class="reward-icon">
+                        🎁
+                    </div>
+
+                    <div class="reward-name">
+                        VOUCHER
+                    </div>
+
+                    <div class="reward-status">
+                        UNLOCKED
+                    </div>
+                </div>
+
+
+                <!-- =================================================
+                     ORANG
+                ================================================== -->
+
+                <div class="people">
+
+                    <div class="person person-1">
+                        <div class="hair"></div>
+                        <div class="head"></div>
+                        <div class="body"></div>
+                        <div class="arm arm-left"></div>
+                        <div class="arm arm-right"></div>
+                        <div class="leg leg-left"></div>
+                        <div class="leg leg-right"></div>
+                    </div>
+
+
+                    <div class="person person-2">
+                        <div class="hair"></div>
+                        <div class="head"></div>
+                        <div class="body"></div>
+                        <div class="arm arm-left"></div>
+                        <div class="arm arm-right"></div>
+                        <div class="leg leg-left"></div>
+                        <div class="leg leg-right"></div>
+                    </div>
+
+
+                    <div class="person person-3">
+                        <div class="hair"></div>
+                        <div class="head"></div>
+                        <div class="body"></div>
+                        <div class="arm arm-left"></div>
+                        <div class="arm arm-right"></div>
+                        <div class="leg leg-left"></div>
+                        <div class="leg leg-right"></div>
+                    </div>
+
+
+                    <div class="person person-4">
+                        <div class="hair"></div>
+                        <div class="head"></div>
+                        <div class="body"></div>
+                        <div class="arm arm-left"></div>
+                        <div class="arm arm-right"></div>
+                        <div class="leg leg-left"></div>
+                        <div class="leg leg-right"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="ground"></div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PROGRESS
+            ================================================== -->
+
+            <div class="progress">
+
+                <div class="progress-top">
+
+                    <div class="progress-title">
+                        TIANG SUDAH DITAKLUKKAN
+                    </div>
+
+                    <div
+                        class="progress-value"
+                        id="progressValue"
+                    >
+                        67%
+                    </div>
+
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-fill"
+                        id="progressFill"
+                    ></div>
+
+                </div>
+
+
+                <div class="progress-labels">
+                    <span>MULAI</span>
+                    <span>PUNCAK</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             LEADERBOARD
+        ====================================================== -->
+
+        <section class="leaderboard">
+
+            <div class="leaderboard-head">
+
+                <div class="leader-title">
+
+                    <div class="leader-icon">
+                        🏆
+                    </div>
+
+                    <div>
+                        <h2>
+                            Top Spender
+                        </h2>
+
+                        <p>
+                            Posisi terakhir sebelum event berakhir
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="ranking-live">
+                    LIVE RANKING
+                </div>
+
+            </div>
+
+
+            <div class="top-three">
+
+                <!-- RANK 2 -->
+
+                <div class="podium">
+
+                    <div class="medal">
+                        🥈
+                    </div>
+
+                    <div class="avatar">
+                        A
+                    </div>
+
+                    <div class="podium-name">
+                        Andi
+                    </div>
+
+                    <div class="podium-rank">
+                        RANK #2
+                    </div>
+
+                </div>
+
+
+                <!-- RANK 1 -->
+
+                <div class="podium first">
+
+                    <div class="medal">
+                        🥇
+                    </div>
+
+                    <div class="avatar">
+                        R
+                    </div>
+
+                    <div class="podium-name">
+                        Rizky
+                    </div>
+
+                    <div class="podium-rank">
+                        RANK #1
+                    </div>
+
+                </div>
+
+
+                <!-- RANK 3 -->
+
+                <div class="podium">
+
+                    <div class="medal">
+                        🥉
+                    </div>
+
+                    <div class="avatar">
+                        B
+                    </div>
+
+                    <div class="podium-name">
+                        Budi
+                    </div>
+
+                    <div class="podium-rank">
+                        RANK #3
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="other-ranks">
+
+                <div class="rank">
+                    <span class="rank-number">#4</span>
+                    <div class="rank-avatar">F</div>
+                    <div class="rank-name">Fajar</div>
+                </div>
+
+                <div class="rank">
+                    <span class="rank-number">#5</span>
+                    <div class="rank-avatar">D</div>
+                    <div class="rank-name">Dimas</div>
+                </div>
+
+                <div class="rank">
+                    <span class="rank-number">#6</span>
+                    <div class="rank-avatar">S</div>
+                    <div class="rank-name">Surya</div>
+                </div>
+
+                <div class="rank">
+                    <span class="rank-number">#7</span>
+                    <div class="rank-avatar">R</div>
+                    <div class="rank-name">Rian</div>
+                </div>
+
+                <div class="rank">
+                    <span class="rank-number">#8</span>
+                    <div class="rank-avatar">A</div>
+                    <div class="rank-name">Aldi</div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            🇮🇩 DIRGAHAYU REPUBLIK INDONESIA
+        </footer>
+
+    </main>
+
+
+    <script>
+
+        /* =====================================================
+           PROGRESS
+        ====================================================== */
+
+        let progress = 67;
+
+        function updateProgress(value)
+        {
+            progress =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        Number(value)
+                    )
+                );
+
+            document
+                .getElementById("progressFill")
+                .style
+                .width =
+                progress + "%";
+
+            document
+                .getElementById("progressValue")
+                .innerText =
+                Math.round(progress) + "%";
+
+
+            document
+                .querySelectorAll(".reward")
+                .forEach(reward => {
+
+                    const unlock =
+                        Number(
+                            reward.dataset.unlock
+                        );
+
+                    const status =
+                        reward.querySelector(
+                            ".reward-status"
+                        );
+
+                    if (progress >= unlock)
+                    {
+                        reward
+                            .classList
+                            .remove("locked");
+
+                        reward
+                            .classList
+                            .add("unlocked");
+
+                        status.innerText =
+                            "UNLOCKED";
+                    }
+                    else
+                    {
+                        reward
+                            .classList
+                            .remove("unlocked");
+
+                        reward
+                            .classList
+                            .add("locked");
+
+                        status.innerText =
+                            "🔒 LOCKED";
+                    }
+
+                });
+        }
+
+
+        /* =====================================================
+           COUNTDOWN DEMO
+        ====================================================== */
+
+        let totalSeconds =
+            (12 * 60 * 60)
+            +
+            (34 * 60)
+            +
+            56;
+
+
+        function updateCountdown()
+        {
+            if (totalSeconds <= 0)
+            {
+                return;
+            }
+
+            totalSeconds--;
+
+
+            const hours =
+                Math.floor(
+                    totalSeconds / 3600
+                );
+
+            const minutes =
+                Math.floor(
+                    (
+                        totalSeconds % 3600
+                    ) / 60
+                );
+
+            const seconds =
+                totalSeconds % 60;
+
+
+            document
+                .getElementById("hours")
+                .innerText =
+                String(hours)
+                    .padStart(2, "0");
+
+
+            document
+                .getElementById("minutes")
+                .innerText =
+                String(minutes)
+                    .padStart(2, "0");
+
+
+            document
+                .getElementById("seconds")
+                .innerText =
+                String(seconds)
+                    .padStart(2, "0");
+        }
+
+
+        /* =====================================================
+           START
+        ====================================================== */
+
+        updateProgress(67);
+
+        setInterval(
+            updateCountdown,
+            1000
+        );
+
+
+        /*
+        ======================================================
+        TEST DI CONSOLE
+
+        updateProgress(20);
+        updateProgress(40);
+        updateProgress(60);
+        updateProgress(80);
+        updateProgress(100);
+
+        ======================================================
+        */
+
+    </script>
+
+</body>
+</html>
+```
