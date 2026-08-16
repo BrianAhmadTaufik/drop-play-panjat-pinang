@@ -2,7 +2,6 @@ FROM php:8.3-apache
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
-# Apache + PHP mod_php harus menggunakan prefork.
 RUN a2dismod mpm_event || true \
     && a2dismod mpm_worker || true \
     && a2dismod mpm_dynamic || true \
@@ -28,11 +27,17 @@ WORKDIR /var/www/html
 
 COPY . .
 
-RUN composer install \
-    --no-interaction \
-    --prefer-dist \
-    --no-dev \
-    --optimize-autoloader
+RUN composer config --global process-timeout 900 \
+    && composer install \
+        --no-interaction \
+        --prefer-dist \
+        --no-dev \
+        --optimize-autoloader \
+    || composer install \
+        --no-interaction \
+        --prefer-source \
+        --no-dev \
+        --optimize-autoloader
 
 RUN mkdir -p \
     storage/framework/cache \
@@ -45,7 +50,6 @@ RUN chown -R www-data:www-data \
     storage \
     bootstrap/cache
 
-# Arahkan Apache ke Laravel /public
 RUN sed -ri \
     -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/sites-available/000-default.conf \
