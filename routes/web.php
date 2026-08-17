@@ -9,7 +9,8 @@ Route::get('/admin', [
     AdminController::class,
     'index',
 ])->name('admin');
-
+Route::post('/admin/participant/{participant}/avatar', [AdminController::class, 'updateAvatar'])
+    ->name('admin.participant.avatar');
 Route::post('/admin/topup', [
     AdminController::class,
     'topup',

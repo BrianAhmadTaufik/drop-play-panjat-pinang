@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -348,4 +349,29 @@ class AdminController extends Controller
             'Transaksi berhasil dihapus.'
         );
     }
+    public function updateAvatar(Request $request, Participant $participant)
+{
+    $request->validate([
+        'avatar' => [
+            'required',
+            'image',
+            'mimes:jpg,jpeg,png,webp',
+            'max:2048',
+        ],
+    ]);
+
+    // Hapus avatar lama jika ada
+    if ($participant->avatar) {
+        Storage::disk('public')->delete($participant->avatar);
+    }
+
+    // Simpan avatar baru
+    $path = $request->file('avatar')->store('avatars', 'public');
+
+    $participant->update([
+        'avatar' => $path,
+    ]);
+
+    return back()->with('success', 'Avatar participant berhasil diperbarui.');
+}
 }

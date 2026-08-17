@@ -9,6 +9,7 @@ class Participant extends Model
 {
     protected $fillable = [
         'name',
+        'avatar',
     ];
 
     public function transactions(): HasMany

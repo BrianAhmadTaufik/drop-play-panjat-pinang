@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Services\ParticipantSpendingService;
 use App\Services\PrizeAllocator;
 use Illuminate\Http\JsonResponse;
+use App\Models\Participant;
 
 class EventController extends Controller
 {
@@ -48,7 +49,16 @@ class EventController extends Controller
         $allocated = $this->prizeAllocator
             ->allocate($event->id);
 
+        $participantIds = $allocated
+            ->pluck('participant_id')
+            ->filter()
+            ->unique()
+            ->values();
 
+        $participantsById = Participant::query()
+            ->whereIn('id', $participantIds)
+            ->get()
+            ->keyBy('id');
         /*
         |--------------------------------------------------------------------------
         | REWARDS PUBLIC
@@ -68,23 +78,38 @@ class EventController extends Controller
         */
 
         $rewards = $allocated
-            ->map(function ($item) {
+    ->map(function ($item) use ($participantsById) {
 
-                return [
-                    'level' =>
-                        $item['level'],
+        $participant =
+            $item['participant_id']
+                ? $participantsById->get(
+                    $item['participant_id']
+                )
+                : null;
 
-                    'name' =>
-                        $item['reward_name'],
+        return [
+            'level' =>
+                $item['level'],
 
-                    'holder' =>
-                        $item['participant_name'],
+            'name' =>
+                $item['reward_name'],
 
-                    'occupied' =>
-                        $item['participant_id'] !== null,
-                ];
-            })
-            ->values();
+            'holder' =>
+                $item['participant_name'],
+
+            'avatar' =>
+                $participant?->avatar
+                    ? asset(
+                        'storage/' .
+                        $participant->avatar
+                    )
+                    : null,
+
+            'occupied' =>
+                $item['participant_id'] !== null,
+        ];
+    })
+    ->values();
 
 
         /*
@@ -212,19 +237,27 @@ class EventController extends Controller
         */
 
         $leaderboard = $participants
-            ->map(
-                function ($participant, $index) {
+    ->map(
+        function ($participant, $index) {
 
-                    return [
-                        'rank' =>
-                            $index + 1,
+            return [
+                'rank' =>
+                    $index + 1,
 
-                        'name' =>
-                            $participant->name,
-                    ];
-                }
-            )
-            ->values();
+                'name' =>
+                    $participant->name,
+
+                'avatar' =>
+                    $participant->avatar
+                        ? asset(
+                            'storage/' .
+                            $participant->avatar
+                        )
+                        : null,
+            ];
+        }
+    )
+    ->values();
 
 
         /*

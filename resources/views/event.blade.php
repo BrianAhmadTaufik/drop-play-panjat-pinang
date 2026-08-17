@@ -601,8 +601,15 @@ body::before {
     color: #655d54;
     font-size: 7px;
     font-weight: 1000;
+    overflow: hidden;
 }
-
+.holder-avatar img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 50%;
+}
 .reward-holder.occupied .holder-avatar {
     background: var(--red);
     color: #fff;
@@ -624,8 +631,15 @@ body::before {
     box-shadow: 0 10px 18px rgba(60,10,18,.22);
     color: #fff;
     font-size: 24px;
+    overflow: hidden !important;
 }
-
+.climber-marker img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
 .climber-marker.empty {
     opacity: .2;
     background: rgba(100,80,60,.35);
@@ -804,8 +818,15 @@ body::before {
     color: #5e554c;
     font-size: 13px;
     font-weight: 1000;
+    overflow: hidden;
 }
 
+.podium-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 .podium.first .podium-avatar {
     width: 61px;
     height: 61px;
@@ -881,6 +902,7 @@ body::before {
     color: #655c53;
     font-size: 9px;
     font-weight: 1000;
+    overflow: hidden;
 }
 
 .rank-name {
@@ -893,6 +915,12 @@ body::before {
     font-weight: 900;
 }
 
+.rank-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 .empty-ranking {
     grid-column: 1 / -1;
     padding: 30px 18px;
@@ -4022,7 +4050,10 @@ body::before {
                             reward.holder
                         )
                         : null;
-
+                const avatar =
+                reward.avatar
+                    ? String(reward.avatar)
+                    : null;
 
                 const initial =
                     holder
@@ -4083,12 +4114,17 @@ body::before {
                         >
 
                             <span class="holder-avatar">
-
-                                ${escapeHtml(
-                                    initial
-                                )}
-
-                            </span>
+    ${
+        avatar
+            ? `
+                <img
+                    src="${escapeHtml(avatar)}"
+                    alt=""
+                >
+            `
+            : escapeHtml(initial)
+    }
+</span>
 
 
                             <span>
@@ -4108,16 +4144,26 @@ body::before {
 
 
                     <div
-                        class="
-                            climber-marker
-                            ${occupied ? '' : 'empty'}
-                        "
-                    >
-
-                        ${occupied ? '🧗' : '•'}
-
-                    </div>
-
+    class="
+        climber-marker
+        ${occupied ? '' : 'empty'}
+    "
+>
+    ${
+        occupied
+            ? (
+                avatar
+                    ? `
+                        <img
+                            src="${escapeHtml(avatar)}"
+                            alt=""
+                        >
+                    `
+                    : 'U'
+            )
+            : ''
+    }
+</div>
                 `;
 
 
@@ -4204,16 +4250,18 @@ body::before {
        LEADERBOARD
     ========================================================== */
 function getLeaderboardSignature(leaderboard)
-    {
-        if (!Array.isArray(leaderboard)) {
-            return '[]';
-        }
-
-        return leaderboard
-            .slice(0, 5)
-            .map(person => `${person.rank}:${person.name}`)
-            .join('|');
+{
+    if (!Array.isArray(leaderboard)) {
+        return '[]';
     }
+
+    return leaderboard
+        .slice(0, 5)
+        .map(person =>
+            `${person.rank}:${person.name}:${person.avatar || ''}`
+        )
+        .join('|');
+}
 
     let lastLeaderboardSignature = null;
 
@@ -4303,28 +4351,38 @@ function getLeaderboardSignature(leaderboard)
             }
 
             const initial =
-                String(person.name)
-                    .trim()
-                    .charAt(0)
-                    .toUpperCase();
+    String(person.name)
+        .trim()
+        .charAt(0)
+        .toUpperCase();
 
-            podium.innerHTML = `
-                <div class="podium-medal">
-                    ${medals[index]}
-                </div>
+const avatarHtml =
+    person.avatar
+        ? `
+            <img
+                src="${escapeHtml(person.avatar)}"
+                alt="${escapeHtml(person.name)}"
+            >
+        `
+        : escapeHtml(initial);
 
-                <div class="podium-avatar">
-                    ${escapeHtml(initial)}
-                </div>
+podium.innerHTML = `
+    <div class="medal">
+        ${medals[index]}
+    </div>
 
-                <div class="podium-name">
-                    ${escapeHtml(person.name)}
-                </div>
+    <div class="podium-avatar">
+        ${avatarHtml}
+    </div>
 
-                <div class="podium-rank">
-                    RANK #${person.rank}
-                </div>
-            `;
+    <div class="podium-name">
+        ${escapeHtml(person.name)}
+    </div>
+
+    <div class="podium-rank">
+        RANK #${person.rank}
+    </div>
+`;
 
             topThree.appendChild(podium);
         });
@@ -4340,24 +4398,34 @@ function getLeaderboardSignature(leaderboard)
                     'rank';
 
                 const initial =
-                    String(person.name)
-                        .trim()
-                        .charAt(0)
-                        .toUpperCase();
+    String(person.name)
+        .trim()
+        .charAt(0)
+        .toUpperCase();
 
-                item.innerHTML = `
-                    <span class="rank-number">
-                        #${person.rank}
-                    </span>
+const avatarHtml =
+    person.avatar
+        ? `
+            <img
+                src="${escapeHtml(person.avatar)}"
+                alt="${escapeHtml(person.name)}"
+            >
+        `
+        : escapeHtml(initial);
 
-                    <div class="rank-avatar">
-                        ${escapeHtml(initial)}
-                    </div>
+item.innerHTML = `
+    <span class="rank-number">
+        #${person.rank}
+    </span>
 
-                    <div class="rank-name">
-                        ${escapeHtml(person.name)}
-                    </div>
-                `;
+    <div class="rank-avatar">
+        ${avatarHtml}
+    </div>
+
+    <div class="rank-name">
+        ${escapeHtml(person.name)}
+    </div>
+`;
 
                 otherRanks.appendChild(item);
             });
