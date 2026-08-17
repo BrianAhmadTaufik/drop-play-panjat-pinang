@@ -4,10 +4,6 @@ WORKDIR /var/www/html
 
 ENV COMPOSER_PROCESS_TIMEOUT=900
 
-# =========================================================
-# System dependencies + PostgreSQL extension
-# =========================================================
-
 RUN apt-get update \
     && apt-get install -y \
         git \
@@ -21,31 +17,19 @@ RUN apt-get update \
         zip \
     && rm -rf /var/lib/apt/lists/*
 
-# =========================================================
-# Composer
-# =========================================================
-
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# =========================================================
-# Laravel project
-# =========================================================
 
 COPY . .
 
-# =========================================================
-# Install PHP dependencies
-# =========================================================
-
-RUN composer install \
-        --no-interaction \
-        --prefer-dist \
-        --no-dev \
-        --optimize-autoloader
-
-# =========================================================
-# Laravel writable directories
-# =========================================================
+RUN if [ -f vendor/autoload.php ]; then \
+        echo "Vendor ditemukan, skip composer install"; \
+    else \
+        composer install \
+            --no-interaction \
+            --prefer-dist \
+            --no-dev \
+            --optimize-autoloader; \
+    fi
 
 RUN mkdir -p \
         storage/framework/cache \
@@ -57,11 +41,6 @@ RUN mkdir -p \
         storage \
         bootstrap/cache
 
-# =========================================================
-# Port
-# =========================================================
-
 EXPOSE 8080
 
-# Railway injects $PORT at runtime
 CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]
